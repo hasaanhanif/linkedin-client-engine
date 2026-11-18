@@ -46,7 +46,7 @@ jobs:
           ENABLE_POST_IMAGE: ${{ vars.ENABLE_POST_IMAGE || 'true' }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_IMAGE_MODEL: ${{ vars.HF_IMAGE_MODEL || 'black-forest-labs/FLUX.1-schnell' }}
-          GITHUB_PAGES_BASE_URL: ${{ vars.GITHUB_PAGES_BASE_URL }}
+          GITHUB_PAGES_BASE_URL: ${{ vars.PAGES_BASE_URL }}
           RUN_MODE: ${{ github.event_name == 'schedule' && 'publish' || inputs.mode }}
         run: python scripts/post_daily.py --mode "$RUN_MODE"
       - name: Update posting history in repository
