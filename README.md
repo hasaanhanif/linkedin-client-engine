@@ -216,3 +216,27 @@ The script **does not send invitations, messages, or emails to potential clients
 ## Current deployment status
 
 All project files and local tests can be verified offline. **The project has NOT been deployed, and no API keys, connected accounts, or LinkedIn channel IDs have been provided or used.** You must complete the account connection steps above. Run the preview before enabling publication.
+
+
+## Add AI-generated images to each LinkedIn post
+
+This project can now attach one image to each Buffer post.
+
+Important notes:
+- Buffer does not accept direct image uploads from the API. It requires a public image URL.
+- Gemini free text generation is used for post copy and image prompts.
+- For actual AI image generation, add a free Hugging Face token. If you do not add one, the workflow falls back to a clean branded card image.
+- Generated images are saved into `docs/media/` and must be publicly reachable through GitHub Pages.
+
+### Required extra setup
+1. Make the repository public OR use a separate public repo for media hosting.
+2. In GitHub, enable Pages from the `main` branch and `/docs` folder.
+3. Add these GitHub settings:
+   - Secret: `HF_TOKEN` (optional but needed for true AI image generation)
+   - Variable: `ENABLE_POST_IMAGE=true`
+   - Variable: `HF_IMAGE_MODEL=black-forest-labs/FLUX.1-schnell`
+   - Variable: `GITHUB_PAGES_BASE_URL=https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME`
+4. Re-run the workflow in `preview` mode first, then in `publish` mode.
+
+### Strictly free caveat
+Gemini's free text API does not provide free image output. That means for true AI images you need a second free image provider. This project uses a Hugging Face token if available, and otherwise falls back to a generated branded card so your post still gets an image.

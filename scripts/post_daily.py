@@ -1,6 +1,7 @@
 """Generate an evergreen expert LinkedIn post and (optionally) enqueue on Buffer.
 
-All network calls are server-to-server. No LinkedIn scraping, messaging, or browser bots.
+Enhancement: can optionally generate an AI image, publish it to GitHub Pages, and
+attach the image URL to the Buffer post.
 """
 import argparse
 from datetime import datetime
@@ -9,12 +10,20 @@ import json
 import os
 from pathlib import Path
 import re
+import subprocess
 from zoneinfo import ZoneInfo
 
-from common import buffer_graphql, generate_with_gemini, required
+from common import (
+    buffer_graphql,
+    generate_image_with_hf,
+    generate_with_gemini,
+    required,
+    save_text_card,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 HISTORY = ROOT / "data" / "post_history.json"
+DOCS_MEDIA = ROOT / "docs" / "media"
 LOCAL_TZ = ZoneInfo("Asia/Karachi")
 SERVICES = [
     ("WordPress", "website conversion, speed, or usability for business owners"),
@@ -52,7 +61,6 @@ def save_history(rows):
 
 
 def choose_topic(now):
-    # Monday is WordPress, Tuesday automation, etc.
     service, focus = SERVICES[now.weekday()]
     angle = ANGLES[(now.timetuple().tm_yday // 7 + now.weekday()) % len(ANGLES)]
     return service, focus, angle
@@ -67,9 +75,9 @@ The writer works in WordPress, full-stack web development, data analytics and n8
 Today: {now.date().isoformat()}. Today's topic: {service}. Focus: {focus}. Angle: {angle}.
 
 Write ONE publish-ready LinkedIn post, 650–1250 characters, useful to prospective paying clients.
-Return ONLY a JSON object with a single string field named 'post'.
+Return ONLY a JSON object with these string fields: 'post', 'image_prompt', 'image_title'.
 
-Rules:
+Rules for post:
 - Begin with a specific pain point or observation, not clickbait.
 - Teach one usable technique or practical checklist, with a concrete action.
 - Conversational professional English, short paragraphs, no markdown bold/asterisks.
@@ -82,6 +90,18 @@ Rules:
 - If you use an example, say 'For example' and clearly describe a hypothetical scenario.
 - No URLs, no placeholder text, no fake quotations. No guaranteed results.
 - Focus on business outcomes, not jargon; don't claim AI replaces human judgment.
+
+Rules for image_prompt:
+- Create a prompt for a professional LinkedIn image related to the topic.
+- No text inside the image.
+- Clean editorial or modern business style, suitable for LinkedIn.
+- Mention the business subject clearly, e.g. laptop website audit, automation workflow, analytics dashboard, developer desk, founder reviewing site, etc.
+- Avoid brand logos and copyrighted characters.
+- Keep it visually relevant to the post.
+
+Rules for image_title:
+- 2 to 5 words maximum.
+- Suitable for use on a fallback branded card.
 
 Do not repeat any recent openings or topics from these posts:
 {json.dumps(recent, ensure_ascii=False)}
@@ -96,7 +116,7 @@ def validate_post(text, history):
         raise ValueError(f"Post length {len(text)} outside safe range 450–1700 characters")
     if any(x in text.lower() for x in ("[your", "[company", "lorem ipsum", "```", "as an ai", "my client", "our client", "i built", "i helped")):
         raise ValueError("Post contains unverified anecdote or placeholder; review required")
-    if re.search(r"(?:\d+(?:\.\d+)?\s*%|\$\s*\d+|\b\d+x\b)", text, re.IGNORECASE):
+    if re.search(r"(?:\d+(?:\.\d+)?\s*%|\$\s*\d+|\d+x)", text, re.IGNORECASE):
         raise ValueError("Post makes an unverified quantified claim; review required")
     for prior in history[-30:]:
         old = prior.get("text", "")
@@ -105,23 +125,68 @@ def validate_post(text, history):
     return text
 
 
-def create_buffer_post(text, channel_id):
+def media_url_for(path: Path):
+    base = required("GITHUB_PAGES_BASE_URL").rstrip("/")
+    rel = path.relative_to(ROOT / "docs").as_posix()
+    return f"{base}/{rel}"
+
+
+def maybe_generate_image(date_str, service, image_prompt, image_title):
+    enabled = os.environ.get("ENABLE_POST_IMAGE", "true").lower() == "true"
+    if not enabled:
+        return None, None
+    DOCS_MEDIA.mkdir(parents=True, exist_ok=True)
+    safe = re.sub(r"[^a-z0-9]+", "-", service.lower()).strip("-")
+    out = DOCS_MEDIA / f"{date_str}-{safe}.png"
+    source = "fallback-card"
+    try:
+        hf_token = os.environ.get("HF_TOKEN", "").strip()
+        if hf_token:
+            model = os.environ.get("HF_IMAGE_MODEL", "black-forest-labs/FLUX.1-schnell").strip()
+            generate_image_with_hf(image_prompt, out, hf_token, model)
+            source = f"hf:{model}"
+        else:
+            save_text_card(out, image_title, service)
+    except Exception as exc:
+        print(f"WARNING: AI image generation failed ({exc}). Using local branded card fallback.")
+        save_text_card(out, image_title, service)
+        source = "fallback-card-after-error"
+    return out, source
+
+
+def create_buffer_post(text, channel_id, image_url=None):
     query = """mutation CreatePost($input: CreatePostInput!) {
       createPost(input: $input) {
-        ... on PostActionSuccess { post { id text dueAt } }
+        ... on PostActionSuccess { post { id text dueAt assets { id mimeType } } }
         ... on MutationError { message }
       }
     }"""
-    result = buffer_graphql(query, {"input": {
+    payload = {
         "text": text,
         "channelId": channel_id,
         "schedulingType": "automatic",
         "mode": "addToQueue",
-    }})
+    }
+    if image_url:
+        payload["assets"] = [{"image": {"url": image_url}}]
+    result = buffer_graphql(query, {"input": payload})
     response = result.get("createPost") or {}
     if response.get("message") or not response.get("post", {}).get("id"):
         raise RuntimeError("Buffer didn't accept the post: " + str(response.get("message", response)))
     return response["post"]
+
+
+def commit_docs_media():
+    subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=False)
+    subprocess.run(["git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"], check=False)
+    subprocess.run(["git", "add", "docs/media"], check=False)
+    if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
+        print("No media file changes to commit.")
+        return
+    subprocess.run(["git", "commit", "-m", "Add generated LinkedIn media"], check=True)
+    branch = os.environ.get("GITHUB_REF_NAME", "main")
+    subprocess.run(["git", "pull", "--rebase", "origin", branch], check=True)
+    subprocess.run(["git", "push", "origin", f"HEAD:{branch}"], check=True)
 
 
 def main():
@@ -136,24 +201,38 @@ def main():
         return
     result = generate_with_gemini(build_prompt(now, history))
     post = validate_post(result.get("post"), history)
+    service = choose_topic(now)[0]
+    image_prompt = (result.get("image_prompt") or "").strip()
+    image_title = (result.get("image_title") or service).strip()[:60]
     print("--- LINKEDIN POST PREVIEW ---")
     print(post)
     print("--- END PREVIEW ---")
+    if image_prompt:
+        print("Image prompt:", image_prompt)
     if args.mode == "preview":
         print("PREVIEW ONLY: Buffer not contacted, no history committed.")
         return
     if os.environ.get("AUTO_POST_ENABLED", "false").lower() != "true":
         print("AUTO_POST_ENABLED is not true; nothing published. Set repository variable after review.")
         return
+    image_url = None
+    image_source = None
+    image_path, image_source = maybe_generate_image(date, service, image_prompt, image_title)
+    if image_path:
+        commit_docs_media()
+        image_url = media_url_for(image_path)
+        print(f"Media prepared: {image_url}")
     channel_id = required("BUFFER_CHANNEL_ID")
-    created = create_buffer_post(post, channel_id)
+    created = create_buffer_post(post, channel_id, image_url=image_url)
     history.append({
         "date": date,
         "status": "queued",
-        "service": choose_topic(now)[0],
+        "service": service,
         "buffer_post_id": created["id"],
         "due_at": created.get("dueAt"),
         "text": post,
+        "image_url": image_url,
+        "image_source": image_source,
     })
     save_history(history)
     print(f"SUCCESS: post {created['id']} queued in Buffer for LinkedIn.")
