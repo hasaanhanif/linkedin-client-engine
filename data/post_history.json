@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "date": "2026-11-18",
+    "status": "queued",
+    "service": "Data Analytics",
+    "buffer_post_id": "6afda3e20aec53ca439a9cc1",
+    "due_at": "2026-11-19T10:47:00.000Z",
+    "text": "Most founders have more data than they have time to interpret. When you look at your dashboard, you should be able to answer three questions in under sixty seconds. If you cannot, the data is noise rather than a tool for decision-making.\n\nHere are three checks to perform on your analytics today:\n\n1. The Traffic Source Check. Are your visitors coming from the channels you are actively investing in, or is your traffic stagnant? If a channel isn't moving, it might be time to refocus your resources.\n\n2. The Exit Point Check. Look at your most visited pages. If users are leaving on a page that should lead to a conversion, you have a clear area to test for layout or copy improvements.\n\n3. The Time-on-Page Check. For example, if a high-value landing page has a very low average time, it suggests the content isn't meeting the expectations set by the initial click.\n\nPractical data is about clarity, not complexity. Do you find that your current setup helps you make decisions, or does it add to your daily mental load?\n\n#DataAnalytics #BusinessIntelligence",
+    "image_url": "https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/docs/media/2026-11-18-data-analytics.png",
+    "image_source": "fallback-card-after-error"
+  }
+]
