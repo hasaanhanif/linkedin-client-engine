@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import time
 from zoneinfo import ZoneInfo
 
 from common import (
@@ -126,9 +127,8 @@ def validate_post(text, history):
 
 
 def media_url_for(path: Path):
-    base = required("GITHUB_PAGES_BASE_URL").rstrip("/")
-    rel = path.relative_to(ROOT / "docs").as_posix()
-    return f"{base}/{rel}"
+    rel = path.relative_to(ROOT).as_posix()
+    return f"https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/{rel}"
 
 
 def maybe_generate_image(date_str, service, image_prompt, image_title):
@@ -222,6 +222,7 @@ def main():
         commit_docs_media()
         image_url = media_url_for(image_path)
         print(f"Media prepared: {image_url}")
+        time.sleep(3)
     channel_id = required("BUFFER_CHANNEL_ID")
     created = create_buffer_post(post, channel_id, image_url=image_url)
     history.append({
