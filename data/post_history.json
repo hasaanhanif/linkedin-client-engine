@@ -8,5 +8,15 @@
     "text": "Most founders have more data than they have time to interpret. When you look at your dashboard, you should be able to answer three questions in under sixty seconds. If you cannot, the data is noise rather than a tool for decision-making.\n\nHere are three checks to perform on your analytics today:\n\n1. The Traffic Source Check. Are your visitors coming from the channels you are actively investing in, or is your traffic stagnant? If a channel isn't moving, it might be time to refocus your resources.\n\n2. The Exit Point Check. Look at your most visited pages. If users are leaving on a page that should lead to a conversion, you have a clear area to test for layout or copy improvements.\n\n3. The Time-on-Page Check. For example, if a high-value landing page has a very low average time, it suggests the content isn't meeting the expectations set by the initial click.\n\nPractical data is about clarity, not complexity. Do you find that your current setup helps you make decisions, or does it add to your daily mental load?\n\n#DataAnalytics #BusinessIntelligence",
     "image_url": "https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/docs/media/2026-11-18-data-analytics.png",
     "image_source": "fallback-card-after-error"
+  },
+  {
+    "date": "2026-11-19",
+    "status": "queued",
+    "service": "Full-Stack Web Development",
+    "buffer_post_id": "6afe2c88c462756e9e24c91d",
+    "due_at": "2026-11-19T10:47:00.000Z",
+    "text": "Many founders assume that a custom web application is the default next step when their current website feels limiting. There is a common misconception that if a business process needs a unique workflow, it requires building a custom platform from scratch. \n\nBefore committing to a custom build, evaluate your requirements against this framework:\n\n1. Define the core bottleneck: Is the issue a lack of integration between existing tools, or is the functionality truly non-existent in the market?\n2. Assess maintenance overhead: Custom code requires ongoing updates, security patching, and scaling. Do you have the infrastructure to support this long-term?\n3. Explore modular architecture: For example, if you need a specialized client portal, consider if an existing CMS like WordPress, extended with custom API integrations or n8n automation, can bridge the gap without the cost of a bespoke build.\n\nCustom development is a powerful tool, but it should solve a unique competitive advantage, not just serve as a substitute for configuration. \n\nHow do you determine when a process has outgrown your existing tech stack? #WebDevelopment #BusinessStrategy",
+    "image_url": "https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/docs/media/2026-11-19-full-stack-web-development.png",
+    "image_source": "fallback-card-after-error"
   }
 ]
