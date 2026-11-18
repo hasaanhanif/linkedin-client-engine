@@ -1,10 +1,1 @@
-[
-  {
-    "date": "2026-11-18",
-    "status": "queued",
-    "service": "Data Analytics",
-    "buffer_post_id": "6afd8507812f9828331130a5",
-    "due_at": "2026-11-19T10:47:00.000Z",
-    "text": "Most founders have access to more data than they have time to interpret. The result is often a dashboard full of vanity metrics that look impressive but provide zero clarity when it comes time to make a business decision.\n\nYou do not need a complex data warehouse to gain insight. You just need to focus on what actually moves the needle. If you want to refine your decision-making process today, perform these three checks on your current reporting:\n\nFirst, isolate your primary lead source. If you cannot identify exactly where your last three inquiries originated, your tracking is likely misconfigured.\n\nSecond, identify your churn or drop-off point. For example, if you run an e-commerce store, look at the specific page where visitors most frequently abandon their carts. Knowing the where is the first step to understanding the why.\n\nThird, verify that your metrics relate to a specific action. If a number on your dashboard does not inform a potential change in strategy, it is noise, not data.\n\nWhich metric currently has the most influence on your planning for next month? #DataAnalytics #FounderTips"
-  }
-]
+[]
