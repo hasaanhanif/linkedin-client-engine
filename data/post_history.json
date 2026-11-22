@@ -48,5 +48,15 @@
     "text": "Disjointed business systems often hide in plain sight. You might have a website for lead generation, an email tool for nurturing, and a spreadsheet for tracking, but if these systems do not talk to each other, you are creating an invisible ceiling for your growth.\n\nThe bottleneck usually isn't a lack of effort; it is the manual friction between your platforms. When a lead fills out a form, the data should flow automatically into your analytics and follow-up sequences without human intervention.\n\nHere is a simple checklist to identify if your systems are disconnected:\n\n1. Does a new website inquiry trigger an immediate update in your CRM?\n2. Can you see which specific marketing source drove that lead without manual cross-referencing?\n3. Are your analytics tools capturing conversion data directly from your site forms?\n\nFor example, if you manually copy data from a web form into a database, you lose time and invite entry errors. Automating that bridge ensures your data stays clean and your focus remains on strategy.\n\nAre your core systems working as one unit or as separate islands?",
     "image_url": "https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/docs/media/2026-11-22-business-systems.png",
     "image_source": "fallback-card-after-error"
+  },
+  {
+    "date": "2026-11-23",
+    "status": "queued",
+    "service": "WordPress",
+    "buffer_post_id": "6b036111d864a01105f96903",
+    "due_at": "2026-11-23T17:53:00.000Z",
+    "text": "When a website takes more than a few seconds to load, visitors often leave before seeing your offer. Most business owners blame their hosting provider or their theme, but the culprit is usually hidden in the way assets are prioritized during the initial page load. \n\nIf you are speaking with a developer or an agency about your WordPress site, ask them this specific question: How do you handle non-critical JavaScript and CSS to ensure the above-the-fold content renders first?\n\nThis simple question forces a conversation about performance optimization beyond just installing a caching plugin. For example, a developer might explain how they defer scripts that aren't necessary for the initial view, or how they optimize the order in which images are fetched. This shifts the focus from 'why is my site slow' to 'how are we prioritizing the user experience.'\n\nWhat is the most common technical hurdle you face when updating your site today?\n\n#WordPress #WebPerformance",
+    "image_url": "https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/docs/media/2026-11-23-wordpress.png",
+    "image_source": "fallback-card-after-error"
   }
 ]
