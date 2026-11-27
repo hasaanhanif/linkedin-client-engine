@@ -78,5 +78,15 @@
     "text": "WordPress sites often struggle with performance not because of the hosting, but because of the accumulation of inactive functionality. When a site starts feeling sluggish, the immediate instinct is often to upgrade the server or install a performance plugin. However, the root cause is frequently a collection of legacy features that remain active long after their purpose has passed.\n\nHere is a simple diagnostic checklist to run on your WordPress dashboard:\n\n1. Deactivate and remove any plugins that are not currently serving a specific business process.\n2. Audit your active theme for unused template files or heavy scripts that run on every page load.\n3. Check for external API calls that might be hanging during the page load sequence.\n\nFor example, consider a hypothetical scenario where a business owner adds a social media feed plugin to their site for a marketing campaign. Once the campaign ends, the plugin remains active, constantly attempting to reach an external server to fetch images that are no longer being posted. This creates a persistent delay for every visitor.\n\nIs your site currently running any features that no longer serve a clear business goal?\n\n#WordPress #WebDevelopment",
     "image_url": "https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/docs/media/2026-11-27-wordpress.png",
     "image_source": "fallback-card-after-error"
+  },
+  {
+    "date": "2026-11-28",
+    "status": "queued",
+    "service": "n8n AI Automation",
+    "buffer_post_id": "6b0a192670e80ae8f1b7495c",
+    "due_at": "2026-11-28T06:51:00.000Z",
+    "text": "Most businesses treat customer inquiries as a linear process: an email arrives, someone reads it, then someone replies. The overlooked bottleneck is the time spent categorizing these inquiries before a human even lays eyes on them. When your team spends hours manually sorting support tickets by urgency or topic, the delay often leads to a drop in responsiveness.\n\nFor example, imagine a workflow where an incoming email triggers an n8n automation. The AI analyzes the intent of the message, tags it by department, and drafts a relevant response based on your documentation, saving it as a draft for your team to review. \n\nTo start fixing this, try this simple checklist:\n\n1. Map out the three most common questions your inbox receives.\n2. Identify which of these can be resolved with existing internal documentation.\n3. Draft a standardized response for those categories.\n\nOnce those are defined, the technical layer of connecting your email provider to an automation tool becomes much more effective. How much time does your team currently spend on manual sorting each week?",
+    "image_url": "https://raw.githubusercontent.com/hasaanhanif/linkedin-client-engine/main/docs/media/2026-11-28-n8n-ai-automation.png",
+    "image_source": "fallback-card-after-error"
   }
 ]
